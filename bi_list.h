@@ -108,9 +108,6 @@ public:
   /*void sorted_pop(char name){
 
     element * e;
-
-    if(iter_element == NULL)
-      return;
     for(element *iter_element = closest; iter_element!=NULL; iter_element = iter_element->next){
       if(iter_element->name == name){
         e = iter_element;
@@ -118,54 +115,35 @@ public:
       }
     }
 
-
-
-    element e;
-    e.name = name;
-    e.dist = dist;
-    e.next = NULL;
-    e.prev = NULL;
-    ele[size] = e;
-    if(size){
-      element *iter_element = closest;
-      for (int i = 0; i<size; i++){
-
-        // inserting in start or somewhere in the middle
-        if(iter_element->dist > dist ){
-          //  in the start
-          if(iter_element->dist == closest->dist){
-            ele[size].prev = closest;
-            element * p = closest;
-            closest = &ele[size];
-            p->next = &ele[size];
-          }
-          else{
-            element * p = iter_element->next;
-            p->prev = &ele[size];
-            ele[size].next = p;
-            ele[size].prev = iter_element;
-            ele[i].next = &ele[size];
-          }
-          break;
-        }
-        if (i==size-1){
-          // when inserted element is farthest
-          element * p = farthest;
-          p->prev = &ele[size];
-          ele[size].next = p;
-          farthest = &ele[size];
-        }
-        iter_element = iter_element->prev;
-      }
+    element * p = e->prev;
+    element * n = e->next;
+    // both sides elements
+    if(p != NULL && n != NULL){
+      p->next = n;
+      n->prev = p;
     }
     else{
-      closest = &ele[0];
-      farthest = &ele[0];
-      ele[0].prev = NULL;
-      ele[0].next = NULL;
+      // no next element but prev element there
+      if(p != NULL){
+        p->next = NULL;
+        closest = p;
+      }
+      else{
+        // no prev element but next element there
+        if(n != NULL){
+          n->prev = NULL;
+          farthest = n;
+        }
+        // neither prev nor next element
+        else{
+          closest = NULL;
+          farthest = NULL;
+        }
+      }
     }
-    size++;
-    cout<<'\n'<<'('<<e.name<<','<<e.dist<<')'<<" element added!";
+
+    size--;
+    cout<<'\n'<<'('<<e->name<<','<<e->dist<<')'<<" element deleted!";
     print_list();
   }*/
 };
