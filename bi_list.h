@@ -1,34 +1,52 @@
 // Bi-direectional list with sorted push
 
 # include<iostream>
+
 namespace bi_list{
-  class node {
-    class element{
-    public:
-      char name;
-      int dist;
-      element *next;
-      element *prev;
-    };
-    char node_name; int max_len;
+
+  class element{
   public:
+    char name;
+    int dist;
+    int iAmNull = 0;
+    element *next;
+    element *prev;
+  };
+
+  class node {
+    int size = 0;
+    char node_name;
     element * closest;
     element * farthest;
-    int size = 0;
 
-    node(char arg1, int arg2){
-      //cout<<arg1;
+  public:
+    node(char arg1='t'){
       node_name = arg1;
-      max_len = arg2;
-      std::cout << "Node Object created\n" << std::endl;
+      //std::cout << "\nList Object "<< node_name <<" created with no elements\n" << std::endl;
     }
 
     ~node(){
       //delete ele;
-      std::cout << "\nNode Object deleted" << std::endl;
+      //std::cout << "\nList Object "<< node_name <<" deleted" << std::endl;
     }
 
-    void print_list();
+    int get_size(){
+      return size;
+    }
+
+    char get_name(){
+      return node_name;
+    }
+
+    element * get_closest(){
+      return closest;
+    }
+
+    element * get_farthest(){
+      return farthest;
+    }
+
+    void print_list(int );
 
     // push an element in a sorted list
     void sorted_push(char , int );
@@ -38,5 +56,15 @@ namespace bi_list{
 
     // popping all elements of a specific distance
     void sorted_pop(int , int );
+
+    // traverse by pos
+    element* traverse(int );
+
+    // traverse by name, if multiple elements present then first one is returned
+    element * traverse_name(char );
+
+    // traverse by name, multiple elements might be returned
+    node traverse_nameMulti(char );
+
   };
 }
