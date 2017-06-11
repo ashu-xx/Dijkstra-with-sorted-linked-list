@@ -26,16 +26,22 @@ namespace bi_list{
     char node_name;
     element * closest;
     element * farthest;
+    node * next;
 
   public:
     node(char arg1='t'){
       node_name = arg1;
+      next = NULL;
       //std::cout << "\nList Object "<< node_name <<" created with no elements\n" << std::endl;
     }
 
     ~node(){
       //delete ele;
       //std::cout << "\nList Object "<< node_name <<" deleted" << std::endl;
+    }
+
+    void set_next(node * nx){
+        next = nx;
     }
 
     int get_size(){
@@ -54,19 +60,19 @@ namespace bi_list{
       return farthest;
     }
 
-    void print_list(int );
+    void print_list(int eleWise = 0);
 
     // push an element in a sorted list
-    void sorted_push(char , int );
+    void sorted_push(char name, int dist,  int nm = -1 );
 
     // popping all elements of a specific name
-    void sorted_pop(char , int );
+    void sorted_pop(char name, int repeat=0);
 
     // popping by pos
     void pos_pop(int);
 
     // popping all elements of a specific distance
-    void sorted_pop(int , int );
+    void sorted_pop(int dist, int repeat=0 );
 
     // traverse by pos
     element* traverse_pos(int );
@@ -81,4 +87,8 @@ namespace bi_list{
     node traverse_nameMulti(char );
 
   };
+
+  node * traverse_node(node *, int);
+
+  int dijkstra_algo(node *n, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
 }
