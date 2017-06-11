@@ -26,9 +26,10 @@ namespace bi_list{
     char node_name;
     element * closest;
     element * farthest;
-    node * next;
 
   public:
+    node * next;
+
     node(char arg1='t'){
       node_name = arg1;
       next = NULL;
@@ -42,6 +43,10 @@ namespace bi_list{
 
     void set_next(node * nx){
         next = nx;
+    }
+
+    node * get_next(){
+        return next;
     }
 
     int get_size(){
@@ -90,5 +95,5 @@ namespace bi_list{
 
   node * traverse_node(node *, int);
 
-  int dijkstra_algo(node *n, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
+  int dijkstra_algo(node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
 }

@@ -3,24 +3,32 @@
 using namespace std;
 
 bi_list::node * bi_list::traverse_node(bi_list::node * n, int pos){
+  bi_list::node * temp = new bi_list::node;
+  temp = n;
   for(int i=0;i<pos;i++)
-    n++;
-  return n;
+    temp = temp->next;
+  return temp;
 }
 
-int bi_list::dijkstra_algo(bi_list::node * start_n, int offset, int * shortest, int num_nodes, int from, int dest, int stop){
+int bi_list::dijkstra_algo(bi_list::node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop){
   cout<<"\ncheck\n";
-  bi_list::node * n_from = bi_list::traverse_node(start_n, from);
-  for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->next){
+  bi_list::node * n_from = NULL;
+  n_from = bi_list::traverse_node(n_start, from);
+
+  for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
     cout<<"\n working on element: "<<e->nm<<','<<e->dist<<" offset="<<offset<< endl;
-    n_from->pos_pop(0);
+    cout<<"\npop: ";
+    n_from->print_list();n_from->pos_pop(0);
+    cout<<"\npoped: ";
+    n_from->print_list();
     if (e->nm == dest){
-      cout<<"\nIn\n";
+      cout<<"\nIn dist"<<e->dist<<"\n";
       *shortest = offset + e->dist;
       return 1;
     }
     if(!(e->nm == from)){
-      stop = bi_list::dijkstra_algo(start_n, e->dist + offset, shortest, num_nodes, e->nm, dest, 0);
+      cout<<'f'<<e->nm;
+      stop = bi_list::dijkstra_algo(n_start, e->dist + offset, shortest, num_nodes, e->nm, dest, 0);
       if (stop)
         break;
     }
@@ -338,7 +346,7 @@ int main(int argc, char const *argv[]) {
   bi_list::node * nd = new bi_list::node;
   nd->sorted_push(static_cast<char>(65+0), 0, 0);
   nd->sorted_push(static_cast<char>(65+1), 1, 1);
-  nd->sorted_push(static_cast<char>(65+1), 2, 2);
+  nd->sorted_push(static_cast<char>(65+2), 2, 2);
   nodes_start = nd;
   nd->print_list();
 
@@ -349,18 +357,21 @@ int main(int argc, char const *argv[]) {
   nd->set_next(nd1);
   nd1->print_list();
 
-  nd = new bi_list::node;
-  nd->sorted_push(static_cast<char>(65+2), 0, 2);
-  nd->sorted_push(static_cast<char>(65+1), 1, 1);
-  nd->sorted_push(static_cast<char>(65+0), 2, 0);
-  nd1->set_next(nd);
-  nd->print_list();
-  nodes_end = nd;
+  bi_list::node *nd2 = new bi_list::node;
+  nd2->sorted_push(static_cast<char>(65+2), 0, 2);
+  nd2->sorted_push(static_cast<char>(65+1), 1, 1);
+  nd2->sorted_push(static_cast<char>(65+0), 2, 0);
+  nd1->set_next(nd2);
+  nd2->print_list();
+  nodes_end = nd2;
 
-  delete nd;
+  bi_list::node * tm = new bi_list::node;
+  tm = traverse_node(nodes_start,1);
+  tm->print_list(1);
   cout<<"\n starting algo\n\n";
   int * shortest_dst = new int;
-  int success = bi_list::dijkstra_algo(nodes_start, 0, shortest_dst, 3, 0, 2, 0);
+  //int dijkstra_algo(node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
+  int success = bi_list::dijkstra_algo(nodes_start, 0, shortest_dst, 3, 2, 0, 0);
 
   if(success)
     cout<<"shortest dist = "<<*shortest_dst;
