@@ -7,10 +7,18 @@ namespace bi_list{
   class element{
   public:
     char name;
+    int nm;
     int dist;
-    int iAmNull = 0;
+    int iAmNull;
     element *next;
     element *prev;
+    element(){
+      iAmNull = 0;
+      dist = -1;
+      nm = -1;
+      next = NULL;
+      prev = NULL;
+    }
   };
 
   class node {
@@ -54,14 +62,20 @@ namespace bi_list{
     // popping all elements of a specific name
     void sorted_pop(char , int );
 
+    // popping by pos
+    void pos_pop(int);
+
     // popping all elements of a specific distance
     void sorted_pop(int , int );
 
     // traverse by pos
-    element* traverse(int );
+    element* traverse_pos(int );
 
     // traverse by name, if multiple elements present then first one is returned
     element * traverse_name(char );
+
+    // traverse by name (int type), if multiple elements present then first one is returned
+    element * traverse_name(int );
 
     // traverse by name, multiple elements might be returned
     node traverse_nameMulti(char );

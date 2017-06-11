@@ -25,7 +25,7 @@ void bi_list::node::print_list(int eleWise = 0){
 }
 
 // traverse by pos
-bi_list::element * bi_list::node::traverse(int pos){
+bi_list::element * bi_list::node::traverse_pos(int pos){
   if((pos>= size) || (size == 0) || (pos<0)){
     element * nl = new element; // since no element found
     nl->iAmNull = 1;
@@ -45,6 +45,20 @@ bi_list::element * bi_list::node::traverse_name(char name){
   int found  = 0;
   for (bi_list::element * iter_element = closest; iter_element!= NULL;iter_element = iter_element->prev){
     if(iter_element->name == name){
+      return iter_element;
+    }
+  }
+  element * nl = new element; // since no element found
+  nl->iAmNull = 1;
+  //std::nullptr_t n;
+  return nl;
+}
+
+// traverse by name, if multiple elements present then first one is returned
+bi_list::element * bi_list::node::traverse_name(int name){
+  int found  = 0;
+  for (bi_list::element * iter_element = closest; iter_element!= NULL;iter_element = iter_element->prev){
+    if(iter_element->nm == name){
       return iter_element;
     }
   }
@@ -115,6 +129,45 @@ void bi_list::node::sorted_push(char name, int dist){
   print_list();
 }
 
+void bi_list::node::pos_pop(int pos){
+  if((pos>= size) || (size == 0) || (pos<0)){
+    return;
+  }
+  for (bi_list::element * iter_element = closest; iter_element!= NULL;iter_element = iter_element->prev){
+    if(!pos){
+      bi_list::element * e = iter_element;
+      bi_list::element * p = e->prev;
+      element * n = e->next;
+      // both sides elements
+      if(p != NULL && n != NULL){
+        p->next = n;
+        n->prev = p;
+      }
+      else{
+        // no next element but prev element there
+        if(p != NULL){
+          p->next = NULL;
+          closest = p;
+        }
+        else{
+          // no prev element but next element there
+          if(n != NULL){
+            n->prev = NULL;
+            farthest = n;
+          }
+          // neither prev nor next element
+          else{
+            closest = NULL;
+            farthest = NULL;
+          }
+        }
+      }
+      size--;
+    }
+
+    pos--;
+  }
+}
 void bi_list::node::sorted_pop(char name, int repeat=0){
 
   element * e;
@@ -154,7 +207,7 @@ void bi_list::node::sorted_pop(char name, int repeat=0){
       }
     }
     size--;
-    cout<<'\n'<<'('<<e->name<<','<<e->dist<<')'<<" element deleted!";
+    //cout<<'\n'<<'('<<e->name<<','<<e->dist<<')'<<" element deleted!";
     sorted_pop(name, 1);
   }
   else{
@@ -232,7 +285,7 @@ int main(int argc, char const *argv[]) {
     cout<<"\nElement not found!"<<endl;
   else
     cout<<"\nfound  "<<ele->name<<','<<ele->dist<<endl;
-  ele = n.traverse(3);
+  ele = n.traverse_pos(3);
   if (ele->iAmNull==1)
     cout<<"\nElement not found!"<<endl;
   else
@@ -243,6 +296,8 @@ int main(int argc, char const *argv[]) {
   nd.print_list(1);
 
   n.print_list();
-  n.sorted_pop('c');
+  n.pos_pop(6);
+  n.print_list();
+  cout<<"\n\nSuccess!";
   return 0;
 }
