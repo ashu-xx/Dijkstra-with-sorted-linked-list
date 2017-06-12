@@ -1,5 +1,6 @@
 // Bi-direectional list with sorted push
-
+#ifndef BI_LIST
+#define BI_LIST
 # include<iostream>
 
 namespace bi_list{
@@ -12,6 +13,7 @@ namespace bi_list{
     int iAmNull;
     element *next;
     element *prev;
+
     element(){
       iAmNull = 0;
       dist = -1;
@@ -101,3 +103,4 @@ namespace dijk{
   void dijkstra_algo(bi_list::node * , bi_list::node * , int , int, int,int all_nodes=0 );
   bi_list::node * add_data_nodes(int *,int );
 }
+#endif

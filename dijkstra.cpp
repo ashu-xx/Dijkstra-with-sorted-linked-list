@@ -1,9 +1,8 @@
 # include "dijkstra.h"
-#include "bi_list.h"
 
 using namespace std;
 
-bi_list::node * bi_list::traverse_node(bi_list::node * n, int pos){
+/*bi_list::node * bi_list::traverse_node(bi_list::node * n, int pos){
   bi_list::node * temp = new bi_list::node;
   temp = n;
   for(int i=0;i<pos;i++)
@@ -225,7 +224,7 @@ void bi_list::node::sorted_pop(char name, int repeat){
       cout<<'\n'<<'\''<<e->name<<'\''<<" element not found in list!";
   }
   if (!repeat)
-    print_list();*/
+    print_list();
 }
 
 // popping all elements of a specific distance
@@ -276,7 +275,7 @@ void bi_list::node::sorted_pop(int dist, int repeat){
       cout<<'\n'<<'\''<<dist<<'\''<<" distanced element not found in list!";
   }
   if(!repeat)
-    print_list();*/
+    print_list();
 }
 
 bi_list::node * dijk::add_data_nodes(int *dist,int num){
@@ -364,7 +363,7 @@ void dijk::dijkstra_algo(bi_list::node * n_start, bi_list::node * shortest, int 
   }
   //cout<<"shortest: "; shortest->print_list(1);
 }
-
+*/
 int main(int argc, char const *argv[]) {
 
   int *arr_pt[num_elements];
@@ -400,42 +399,24 @@ int main(int argc, char const *argv[]) {
     }
   }
 
-  int choice = 0;
-  cout<<"Shortest distance (enter 0) or MST (enter 1)"<<endl;
-  cin >> choice;
 
-  if(!choice){
-    int start; int dest;
-    cout<<"\n\tShortest Distance:\n";
-    cout<<"From Node: ";cin>>start;
-    cout<<"\nTo Node: ";cin>>dest;
-    if(start<0 || start>=num_elements)
-      start = 0;
-    if(dest<0 || dest>=num_elements)
-        dest = num_elements-1;
-    bi_list::node * shortest_dst = new bi_list::node;
+	int start; int dest;
+	cout<<"\n\tShortest Distance:\n";
+	cout<<"From Node: ";cin>>start;
+	cout<<"\nTo Node: ";cin>>dest;
+	int flag= 0;
+	if(start<0 || start>=num_elements)
+	  start = 0;
+	if(dest<0 || dest>=num_elements)
+		flag=1;
+	bi_list::node * shortest_dst = new bi_list::node;
 
-    dijk::dijkstra_algo(nodes_start, shortest_dst, start, dest, num_elements);
-    shortest_dst->print_list(1);
-    bi_list::element * ans = shortest_dst->traverse_name(dest);
-    if (!ans->iAmNull){
-      cout<<"shortest dist from "<<static_cast<char>(65+start)<<" to "<< static_cast<char>(65+dest)<<" is "<< ans->dist;
-    }
-    else
-      cout<<static_cast<char>(65+dest)<<"is not conneccted to "<< static_cast<char>(65+start);
-  }
-  else{
-    int start;
-    cout<<"\n\tMST:\n";
-    cout<<"Node: ";cin>>start;
-    if(start<0 || start>=num_elements)
-      start = 0;
-    for (int i=0;i<num_elements;i++){
-      if (i!=start)   continue;
-      bi_list::node * MST = new bi_list::node;
-      dijk::dijkstra_algo(nodes_start, MST, i, -1, num_elements, 1);
-      cout<<"\nMST for node "<< static_cast<char>(65+i)<<endl;
-      MST->print_list(1);
-    }
-  }
+	dijk::dijkstra_algo(nodes_start, shortest_dst, start, dest, num_elements, flag);
+	shortest_dst->print_list(1);
+	bi_list::element * ans = shortest_dst->traverse_name(dest);
+	if (!ans->iAmNull){
+	  cout<<"shortest dist from "<<static_cast<char>(65+start)<<" to "<< static_cast<char>(65+dest)<<" is "<< ans->dist<<endl;
+	}
+	else
+	  cout<<static_cast<char>(65+dest)<<"is not conneccted to "<< static_cast<char>(65+start)<<endl;
 }
