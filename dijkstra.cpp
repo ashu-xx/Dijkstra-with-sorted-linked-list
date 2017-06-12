@@ -11,67 +11,6 @@ bi_list::node * bi_list::traverse_node(bi_list::node * n, int pos){
   return temp;
 }
 
-void dijk::dijk_insert(bi_list::node *n, bi_list::element *e,bi_list::node *t){
-  bi_list::element *search_t = t->traverse_name(e->nm);
-  if(!search_t->iAmNull){
-    //cout<<"\n sorry, found in t "<<search_t->nm;
-    //t->print_list(1);
-    return;}
-  bi_list::element *search = n->traverse_name(e->nm);
-  if(!search->iAmNull){
-    //cout<<search->dist<<','<<e->dist<<endl;
-    if(search->dist > e->dist){
-      //cout<<'\n'<<"putting in place larger val "<< static_cast<char>(65+e->nm)<<','<<e->nm<<','<<e->dist<<" than "<<search->dist<<endl;
-      n->sorted_pop(static_cast<char>(e->nm+65));
-      n->sorted_push(static_cast<char>(e->nm+65), e->dist, e->nm);
-      //n->print_list(1);
-    }
-  }
-  else{
-    //cout<<'\n'<<"not there, putting in "<< static_cast<char>(65+e->nm)<<','<<e->nm<<','<<e->dist;
-    n->sorted_push(static_cast<char>(e->nm+65), e->dist, e->nm);
-    //n->print_list(1);
-  }
-}
-
-void dijk::dijkstra_algo(bi_list::node * n_start, bi_list::node * shortest, int from, int dest,int num_nodes, int all_nodes){
-  if(!all_nodes)
-    if(dest<0)
-      return;
-  bi_list::node * n_from = NULL;
-  bi_list::node * trav = new bi_list::node;
-  n_from = bi_list::traverse_node(n_start, from);
-  for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
-    dijk_insert(trav, e, shortest);
-    n_from->pos_pop(0);
-  }
-  bi_list::element * ans = shortest->traverse_name(dest);
-  while(shortest->get_size()<num_nodes && (all_nodes ? 1:ans->iAmNull)){
-    n_from = NULL;
-    bi_list::element* el = trav->get_closest();
-    if(el!= NULL){
-      trav->pos_pop(0);
-      shortest->sorted_push(el->name, el->dist, el->nm);
-
-      n_from = bi_list::traverse_node(n_start, el->nm);
-      for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
-        e->dist += el->dist;
-        dijk_insert(trav, e, shortest);
-      }
-    }
-    else{
-      // all elements traversed in the network
-      break;
-    }
-    if(!all_nodes)
-      ans = shortest->traverse_name(dest);
-    //else
-      //shortest->print_list(1);
-    //cout<<"shortest: "; shortest->print_list(1);
-  }
-  //cout<<"shortest: "; shortest->print_list(1);
-}
-
 void bi_list::node::print_list(int eleWise){
   element *iter_element = closest;
   cout<<"\n";
@@ -351,6 +290,79 @@ bi_list::node * dijk::add_data_nodes(int *dist,int num){
     }
   }
   return n;
+}
+
+void dijk::dijk_insert(bi_list::node *n, bi_list::element *e,bi_list::node *t){
+  bi_list::element *search_t = t->traverse_name(e->nm);
+  if(!search_t->iAmNull){
+    //cout<<"\n sorry, found in t "<<search_t->nm;
+    //t->print_list(1);
+    return;}
+  bi_list::element *search = n->traverse_name(e->nm);
+  if(!search->iAmNull){
+    //cout<<search->dist<<','<<e->dist<<endl;
+    if(search->dist > e->dist){
+      //cout<<'\n'<<"putting in place larger val "<< static_cast<char>(65+e->nm)<<','<<e->nm<<','<<e->dist<<" than "<<search->dist<<endl;
+      n->sorted_pop(static_cast<char>(e->nm+65));
+      n->sorted_push(static_cast<char>(e->nm+65), e->dist, e->nm);
+      //n->print_list(1);
+    }
+  }
+  else{
+    //cout<<'\n'<<"not there, putting in "<< static_cast<char>(65+e->nm)<<','<<e->nm<<','<<e->dist;
+    n->sorted_push(static_cast<char>(e->nm+65), e->dist, e->nm);
+    //n->print_list(1);
+  }
+}
+
+void dijk::dijkstra_algo(bi_list::node * n_start, bi_list::node * shortest, int from, int dest,int num_nodes, int all_nodes){
+  // if all_nodes is true, entire MST is traced out otherwise its stopped when
+  // shortest distanced to desired destination is obtained
+  if(!all_nodes)
+    if(dest<0)
+      return;
+  bi_list::node * n_from = NULL;
+  bi_list::node * trav = new bi_list::node;
+
+  n_from = bi_list::traverse_node(n_start, from);
+
+  // add the immediately connected nodes to the starting node
+  for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
+    dijk_insert(trav, e, shortest);
+    n_from->pos_pop(0);
+  }
+
+  // 'ans' keeps looking when we would have the desired destination in the shortest
+  // path collection ie. bi_list::node shortest
+  bi_list::element * ans = shortest->traverse_name(dest);
+
+  while(shortest->get_size()<num_nodes && (all_nodes ? 1:ans->iAmNull)){
+    n_from = NULL;
+
+    // 'el' is the closest node element in node object trav (trav stores the distances
+    // under considersation for transfer to the shortest path node object)
+    bi_list::element* cl = trav->get_closest();
+    if(cl!= NULL){
+      trav->pos_pop(0);
+      shortest->sorted_push(cl->name, cl->dist, cl->nm);
+
+      n_from = bi_list::traverse_node(n_start, cl->nm);
+      for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
+        e->dist += cl->dist;
+        dijk_insert(trav, e, shortest);
+      }
+    }
+    else{
+      // all elements traversed in the network
+      break;
+    }
+    if(!all_nodes)
+      ans = shortest->traverse_name(dest);
+    //else
+      //shortest->print_list(1);
+    //cout<<"shortest: "; shortest->print_list(1);
+  }
+  //cout<<"shortest: "; shortest->print_list(1);
 }
 
 int main(int argc, char const *argv[]) {
