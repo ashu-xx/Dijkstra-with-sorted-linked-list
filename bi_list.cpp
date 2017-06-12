@@ -10,32 +10,6 @@ bi_list::node * bi_list::traverse_node(bi_list::node * n, int pos){
   return temp;
 }
 
-int bi_list::dijkstra_algo(bi_list::node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop){
-  cout<<"\ncheck\n";
-  bi_list::node * n_from = NULL;
-  n_from = bi_list::traverse_node(n_start, from);
-
-  for(bi_list::element *e = n_from->get_closest(); e!=NULL; e=e->prev){
-    cout<<"\n working on element: "<<e->nm<<','<<e->dist<<" offset="<<offset<< endl;
-    cout<<"\npop: ";
-    n_from->print_list();n_from->pos_pop(0);
-    cout<<"\npoped: ";
-    n_from->print_list();
-    if (e->nm == dest){
-      cout<<"\nIn dist"<<e->dist<<"\n";
-      *shortest = offset + e->dist;
-      return 1;
-    }
-    if(!(e->nm == from)){
-      cout<<'f'<<e->nm;
-      stop = bi_list::dijkstra_algo(n_start, e->dist + offset, shortest, num_nodes, e->nm, dest, 0);
-      if (stop)
-        break;
-    }
-  }
-  return stop;
-}
-
 void bi_list::node::print_list(int eleWise){
   element *iter_element = closest;
   cout<<"\n";
@@ -305,7 +279,7 @@ void bi_list::node::sorted_pop(int dist, int repeat){
 }
 
 
-/*int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) {
   bi_list::node n('n');
   n.sorted_push('a',9);
   n.sorted_push('b',2);
@@ -335,8 +309,8 @@ void bi_list::node::sorted_pop(int dist, int repeat){
   n.print_list();
   cout<<"\n\nSuccess!";
   return 0;
-}*/
-
+}
+/*
 int main(int argc, char const *argv[]) {
   bi_list::node * nodes_start;
   bi_list::node * nodes_end;
@@ -369,14 +343,15 @@ int main(int argc, char const *argv[]) {
   tm = traverse_node(nodes_start,1);
   tm->print_list(1);
   cout<<"\n starting algo\n\n";
-  int * shortest_dst = new int;
-  //int dijkstra_algo(node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
-  int success = bi_list::dijkstra_algo(nodes_start, 0, shortest_dst, 3, 2, 0, 0);
+  bi_list::node * shortest_dst = new bi_list::node;
+  //int bi_list::dijkstra_algo(bi_list::node * n_start, bi_list::node * shortest, int from, int dest)
+  int distance = dijk::dijkstra_algo(nodes_start, shortest_dst, 1, 0);
 
-  if(success)
-    cout<<"shortest dist = "<<*shortest_dst;
+  if(distance>=0)
+    cout<<"shortest dist = "<< distance;
   else
     cout<<"Unable to find!";
 
   return 0;
 }
+*/

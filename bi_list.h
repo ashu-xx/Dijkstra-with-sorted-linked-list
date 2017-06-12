@@ -22,7 +22,7 @@ namespace bi_list{
   };
 
   class node {
-    int size = 0;
+    int size;
     char node_name;
     element * closest;
     element * farthest;
@@ -31,6 +31,7 @@ namespace bi_list{
     node * next;
 
     node(char arg1='t'){
+      size = 0;
       node_name = arg1;
       next = NULL;
       //std::cout << "\nList Object "<< node_name <<" created with no elements\n" << std::endl;
@@ -92,8 +93,11 @@ namespace bi_list{
     node traverse_nameMulti(char );
 
   };
-
   node * traverse_node(node *, int);
+}
 
-  int dijkstra_algo(node * n_start, int offset, int * shortest, int num_nodes, int from, int dest, int stop=0);
+namespace dijk{
+  void dijk_insert(bi_list::node*, bi_list::element*,bi_list::node*);
+  void dijkstra_algo(bi_list::node * , bi_list::node * , int , int, int,int all_nodes=0 );
+  bi_list::node * add_data_nodes(int *,int );
 }
