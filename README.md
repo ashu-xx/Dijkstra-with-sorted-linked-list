@@ -1,5 +1,5 @@
-# biDirectionalLinkedList
-With sorted push
+# Dijkstra-with-sorted-linked-list
+
 Contains a bi- directional sorted linked list implementation.
 (bi_list.cpp)
 
